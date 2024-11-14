@@ -10,7 +10,7 @@ export default function Mission() {
         
         <div className="prose prose-lg">
           <p className="text-gray-600 leading-relaxed">
-            Our mission is to empower individuals and communities to make informed decisions about water usage, helping to reduce waste and promote sustainable living. By providing real-time data and AI-driven insights, our Smart Utilities System allows users to monitor and manage water consumption with ease. We believe that technology can play a transformative role in conserving our most precious resources, and we're committed to developing innovative solutions that make water-saving both accessible and actionable.
+            Our mission is to empower individuals and communities to make informed decisions about water usage, helping to reduce waste and promote sustainable living. By providing real-time data and AI-driven insights, our Smart Utilities System allows users to monitor and manage water consumption with ease. We believe that technology can play a transformative role in conserving our most precious resources, and we&apos;re committed to developing innovative solutions that make water-saving both accessible and actionable.
           </p>
         </div>
       </main>

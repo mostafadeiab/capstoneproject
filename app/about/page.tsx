@@ -10,7 +10,7 @@ export default function About() {
         
         <div className="prose prose-lg">
           <p className="text-gray-600 leading-relaxed">
-            We are a team of four engineering students from the University of Guelph, united by a shared commitment to sustainability and innovation. This project, our capstone initiative, was born out of our passion for developing technology that can positively impact our communities and the environment. The Smart Utilities System is designed to be an easy-to-use, AI-powered solution for monitoring water usage in households. Our goal is to help users save water, reduce costs, and make more sustainable choices effortlessly. We're excited to share this journey with you and look forward to making a difference, one drop at a time.
+            We are a team of four engineering students from the University of Guelph, united by a shared commitment to sustainability and innovation. This project, our capstone initiative, was born out of our passion for developing technology that can positively impact our communities and the environment. The Smart Utilities System is designed to be an easy-to-use, AI-powered solution for monitoring water usage in households. Our goal is to help users save water, reduce costs, and make more sustainable choices effortlessly. We&apos;re excited to share this journey with you and look forward to making a difference, one drop at a time.
           </p>
         </div>
       </main>

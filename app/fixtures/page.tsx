@@ -65,7 +65,7 @@ export default function Fixtures() {
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 mt-1">1</div>
-              <p className="text-gray-600">Click the "Add Fixture" button to open the fixture form.</p>
+              <p className="text-gray-600">Click the &quot;Add Fixture&quot; button to open the fixture form.</p>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 mt-1">2</div>
@@ -77,7 +77,7 @@ export default function Fixtures() {
             </div>
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 mt-1">4</div>
-              <p className="text-gray-600">Click "Save" to add the fixture to your dashboard. You can add as many fixtures as needed.</p>
+              <p className="text-gray-600">Click &quot;Save&quot; to add the fixture to your dashboard. You can add as many fixtures as needed.</p>
             </div>
           </div>
         </div>

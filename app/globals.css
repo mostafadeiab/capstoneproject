@@ -3,19 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #00A4CC;
+  --primary-dark: #008FBF;
+  --accent: #00796B;
+  --accent-dark: #005B4F;
+  --background: #F0F0F0;
+  --text: #333333;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .nav-link {
+    @apply inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-accent border-b-2 border-transparent hover:border-accent transition-colors;
+  }
+
+  .dropdown-menu {
+    @apply absolute z-10 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5;
+  }
+
+  .dropdown-item {
+    @apply block px-4 py-2 text-sm text-gray-700 hover:bg-background hover:text-accent transition-colors;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply text-[#333333];
+  font-family: 'Roboto', sans-serif;
 }

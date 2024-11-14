@@ -12,10 +12,16 @@ const FIXTURE_TYPES = [
   'Washing Machine'
 ];
 
+type NewFixture = {
+  name: string;
+  type: string;
+  location: string;
+};
+
 type FixtureModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (fixture: Fixture | Omit<Fixture, 'id'>) => void;
+  onSave: (fixture: NewFixture) => void;
   fixture?: Fixture | null;
 };
 
@@ -41,7 +47,7 @@ export default function FixtureModal({ isOpen, onClose, onSave, fixture }: Fixtu
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(fixture ? { ...fixture, name, type, location } : { name, type, location });
+    onSave({ name, type, location });
   };
 
   return (

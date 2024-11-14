@@ -12,6 +12,8 @@ export type Fixture = {
   location: string;
 };
 
+type NewFixture = Omit<Fixture, 'id'>;
+
 export default function Fixtures() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
@@ -30,17 +32,21 @@ export default function Fixtures() {
     localStorage.setItem('fixtures', JSON.stringify(fixtures));
   }, [fixtures]);
 
-  const handleAddFixture = (fixture: Omit<Fixture, 'id'>) => {
+  const handleAddFixture = (fixture: NewFixture) => {
     const newFixture = { ...fixture, id: Date.now().toString() };
     setFixtures([...fixtures, newFixture]);
     setIsModalOpen(false);
   };
 
-  const handleEditFixture = (updatedFixture: Fixture) => {
+  const handleEditFixture = (fixture: NewFixture) => {
+    if (!editingFixture) return;
+    
+    const updatedFixture = { ...fixture, id: editingFixture.id };
     setFixtures(fixtures.map(f => 
-      f.id === updatedFixture.id ? updatedFixture : f
+      f.id === editingFixture.id ? updatedFixture : f
     ));
     setEditingFixture(null);
+    setIsModalOpen(false);
   };
 
   const handleDeleteFixture = (id: string) => {

@@ -27,6 +27,14 @@ type AggregatedData = {
 
 type TimeRange = '1week' | '1month' | '3months' | '6months' | '1year';
 
+// Define type for CSV row data
+type CSVRowData = {
+  Timestamp: string;
+  'Device Name': string;
+  'Volume Used (L)': string;
+  [key: string]: string; // for other columns we don't use
+};
+
 export default function Forecast() {
   const [data, setData] = useState<ForecastData[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>('all');
@@ -49,14 +57,14 @@ export default function Forecast() {
 
   const aggregateDataByDay = (data: ForecastData[]) => {
     const aggregated = data.reduce((acc: { [key: string]: number }, curr) => {
-      const date = curr.timestamp.split(' ')[0]; // Get just the date part
+      const date = curr.timestamp.split(' ')[0];
       acc[date] = (acc[date] || 0) + curr.volume;
       return acc;
     }, {});
 
     return Object.entries(aggregated).map(([date, volume]) => ({
       date,
-      volume: Number(volume.toFixed(2)) // Round to 2 decimal places
+      volume: Number(volume.toFixed(2))
     })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
 
@@ -66,20 +74,19 @@ export default function Forecast() {
       const response = await fetch('/Forecast.csv');
       const csvText = await response.text();
       
-      const results = parse(csvText, {
+      const results = parse<CSVRowData>(csvText, {
         header: true,
         skipEmptyLines: true,
       });
 
-      const formattedData = results.data.map((row: any) => ({
-        timestamp: row['Timestamp'],
+      const formattedData = results.data.map((row) => ({
+        timestamp: row.Timestamp,
         device: row['Device Name'],
         volume: parseFloat(row['Volume Used (L)'])
       }));
 
       setData(formattedData);
       
-      // Set initial start date
       if (formattedData.length > 0 && formattedData[0].timestamp) {
         const dateStr = formattedData[0].timestamp.split(' ')[0];
         setStartDate(dateStr);
@@ -99,7 +106,7 @@ export default function Forecast() {
     if (!data.length || !startDate) return;
 
     const startDateTime = new Date(startDate);
-    let endDateTime = new Date(startDate);
+    const endDateTime = new Date(startDate);
 
     switch (selectedTimeRange) {
       case '1week':

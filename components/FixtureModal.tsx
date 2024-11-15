@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import { Fixture } from '@/app/fixtures/page';
 
 const FIXTURE_TYPES = [
-  'Kitchen Sink',
-  'Bathroom Sink',
-  'Toilet',
-  'Shower',
-  'Dishwasher',
-  'Washing Machine'
+  'bathroom_sink',
+  'bathroom_sink_2',
+  'toilet',
+  'toilet_2',
+  'washing_machine',
+  'dishwasher',
+  'shower',
+  'kitchen_sink'
 ];
 
 type NewFixture = {

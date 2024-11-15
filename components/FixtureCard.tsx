@@ -10,18 +10,22 @@ interface FixtureCardProps {
 
 const getFixtureIcon = (type: string) => {
   switch (type) {
-    case 'Kitchen Sink':
+    case 'kitchen_sink':
       return '/fixtures/kitchen-sink.svg';
-    case 'Bathroom Sink':
+    case 'bathroom_sink':
       return '/fixtures/bathroom-sink.svg';
-    case 'Toilet':
+    case 'bathroom_sink_2':
+      return '/fixtures/bathroom-sink-2.svg';
+    case 'toilet':
       return '/fixtures/toilet.svg';
-    case 'Shower':
-      return '/fixtures/shower.svg';
-    case 'Dishwasher':
-      return '/fixtures/dishwasher.svg';
-    case 'Washing Machine':
+    case 'toilet_2':
+      return '/fixtures/toilet-2.svg';
+    case 'washing_machine':
       return '/fixtures/washing-machine.svg';
+    case 'dishwasher':
+      return '/fixtures/dishwasher.svg';
+    case 'shower':
+      return '/fixtures/shower.svg';
     default:
       return '/fixtures/default.svg';
   }

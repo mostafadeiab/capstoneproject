@@ -19,7 +19,7 @@ export default function Home() {
               className="text-primary"
             />
             <h1 className="text-4xl font-bold text-gray-800">
-              Smart Utilities System TEST
+              Smart Utilities System
             </h1>
           </div>
           <p className="text-xl text-primary italic">Save More</p>

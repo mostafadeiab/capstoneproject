@@ -38,17 +38,31 @@ export default function Anomaly() {
   const [endDate, setEndDate] = useState<string>('');
   const [dateRangeTotal, setDateRangeTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const loadData = async () => {
     setIsLoading(true);
+    setError('');
     try {
       const response = await fetch('/Anomaly.csv');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      
       const csvText = await response.text();
+      console.log('CSV Text:', csvText); // Debug log
       
       const results = parse<CSVRowData>(csvText, {
         header: true,
         skipEmptyLines: true,
       });
+
+      console.log('Parsed Results:', results); // Debug log
+
+      if (results.errors.length > 0) {
+        console.error('Parse errors:', results.errors);
+        throw new Error('Failed to parse CSV data');
+      }
 
       const formattedData = results.data
         .map((row) => ({
@@ -59,6 +73,8 @@ export default function Anomaly() {
           isAnomaly: row.Anomaly === '1'
         }))
         .filter((item: AnomalyData) => item.isAnomaly);
+
+      console.log('Formatted Data:', formattedData); // Debug log
 
       setData(formattedData);
 
@@ -78,11 +94,24 @@ export default function Anomaly() {
         return acc;
       }, {});
 
-      setGroupedAnomalies(Object.values(grouped).sort((a, b) => 
+      const sortedGroups = Object.values(grouped).sort((a, b) => 
         new Date(b.date).getTime() - new Date(a.date).getTime()
-      ));
+      );
+
+      console.log('Grouped Anomalies:', sortedGroups); // Debug log
+      setGroupedAnomalies(sortedGroups);
+
+      // Set initial date range if data exists
+      if (formattedData.length > 0) {
+        const dates = formattedData.map(d => new Date(d.date));
+        const earliest = new Date(Math.min(...dates.map(d => d.getTime())));
+        const latest = new Date(Math.max(...dates.map(d => d.getTime())));
+        setStartDate(earliest.toISOString().split('T')[0]);
+        setEndDate(latest.toISOString().split('T')[0]);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load data');
     } finally {
       setIsLoading(false);
     }
@@ -116,6 +145,12 @@ export default function Anomaly() {
           <h1 className="text-3xl font-bold text-gray-800">Anomaly Detection</h1>
           <p className="text-gray-600 mt-2">Data for a 3-person household</p>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-8">
+            {error}
+          </div>
+        )}
         
         {/* Date Range Selection */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -155,7 +190,23 @@ export default function Anomaly() {
 
         {/* Anomalies List */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Detected Anomalies</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Detected Anomalies</h2>
+            <button
+              onClick={loadData}
+              disabled={isLoading}
+              className="px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors flex items-center gap-2"
+            >
+              {isLoading ? (
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                </svg>
+              )}
+              Refresh Data
+            </button>
+          </div>
           
           {isLoading ? (
             <div className="flex justify-center items-center h-32">

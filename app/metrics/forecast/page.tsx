@@ -42,6 +42,7 @@ export default function Forecast() {
   const [startDate, setStartDate] = useState<string>('');
   const [filteredData, setFilteredData] = useState<AggregatedData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalUsage, setTotalUsage] = useState<number>(0);
 
   const devices = [
     'all',
@@ -135,6 +136,9 @@ export default function Forecast() {
       filtered = filtered.filter(item => item.device === selectedDevice);
     }
 
+    const total = filtered.reduce((sum, item) => sum + item.volume, 0);
+    setTotalUsage(Number(total.toFixed(2)));
+
     const aggregatedData = aggregateDataByDay(filtered);
     setFilteredData(aggregatedData);
   }, [data, selectedDevice, selectedTimeRange, startDate]);
@@ -149,7 +153,10 @@ export default function Forecast() {
       
       <main className="max-w-7xl mx-auto px-8 py-16">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Water Usage Forecast</h1>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">Water Usage Forecast</h1>
+            <p className="text-gray-600 mt-2">Data for a 3-person household</p>
+          </div>
           <div className="flex gap-4">
             <button
               onClick={loadData}
@@ -177,6 +184,22 @@ export default function Forecast() {
           </div>
         </div>
         
+        {/* Total Usage Display */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">Total Forecasted Usage</h2>
+              <p className="text-gray-600">Next {selectedTimeRange.replace(/\d+/, match => match + ' ')}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-3xl font-bold text-primary">{totalUsage} L</p>
+              <p className="text-sm text-gray-600">
+                {selectedDevice === 'all' ? 'All fixtures' : selectedDevice.replace(/_/g, ' ')}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Time Range Selector */}

@@ -61,7 +61,7 @@ export default function NavBar() {
                   <div className="dropdown-menu">
                     <Link href="/metrics/forecast" className="dropdown-item">Forecast</Link>
                     <Link href="/metrics/current" className="dropdown-item">Current Use</Link>
-                    <Link href="/metrics/abnormalities" className="dropdown-item">Abnormalities</Link>
+                    <Link href="/metrics/anomaly" className="dropdown-item">Anomaly</Link>
                   </div>
                 )}
               </div>

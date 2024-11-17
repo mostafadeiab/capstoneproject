@@ -28,6 +28,14 @@ type AggregatedData = {
 type ViewMode = 'all-time' | 'billing-period';
 type TimeRange = 'today' | '1week' | '1month' | '3months' | '6months' | '1year';
 
+// Define type for CSV row data
+type CSVRowData = {
+  Timestamp: string;
+  'Device Name': string;
+  'Volume Used (L)': string;
+  [key: string]: string;
+};
+
 export default function CurrentUse() {
   const [data, setData] = useState<UsageData[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('all-time');
@@ -80,13 +88,13 @@ export default function CurrentUse() {
       const response = await fetch('/Current.csv');
       const csvText = await response.text();
       
-      const results = parse(csvText, {
+      const results = parse<CSVRowData>(csvText, {
         header: true,
         skipEmptyLines: true,
       });
 
-      const formattedData = results.data.map((row: any) => ({
-        timestamp: row['Timestamp'],
+      const formattedData = results.data.map((row) => ({
+        timestamp: row.Timestamp,
         device: row['Device Name'],
         volume: parseFloat(row['Volume Used (L)'])
       }));

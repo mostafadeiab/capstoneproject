@@ -3,16 +3,6 @@
 import { useState, useEffect } from 'react';
 import NavBar from "@/components/NavBar";
 import { parse } from 'papaparse';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer
-} from 'recharts';
 
 type AnomalyData = {
   timestamp: string;
@@ -31,6 +21,15 @@ type GroupedAnomaly = {
   }[];
 };
 
+// Define type for CSV row data
+type CSVRowData = {
+  Timestamp: string;
+  'Device Name': string;
+  'Volume Used (L)': string;
+  Anomaly: string;
+  [key: string]: string;
+};
+
 export default function Anomaly() {
   const [data, setData] = useState<AnomalyData[]>([]);
   const [groupedAnomalies, setGroupedAnomalies] = useState<GroupedAnomaly[]>([]);
@@ -46,18 +45,18 @@ export default function Anomaly() {
       const response = await fetch('/Anomaly.csv');
       const csvText = await response.text();
       
-      const results = parse(csvText, {
+      const results = parse<CSVRowData>(csvText, {
         header: true,
         skipEmptyLines: true,
       });
 
       const formattedData = results.data
-        .map((row: any) => ({
-          timestamp: row['Timestamp'],
-          date: row['Timestamp'].split(' ')[0],
+        .map((row) => ({
+          timestamp: row.Timestamp,
+          date: row.Timestamp.split(' ')[0],
           device: row['Device Name'],
           volume: parseFloat(row['Volume Used (L)']),
-          isAnomaly: row['Anomaly'] === '1'
+          isAnomaly: row.Anomaly === '1'
         }))
         .filter((item: AnomalyData) => item.isAnomaly);
 

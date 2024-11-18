@@ -48,8 +48,6 @@ export default function Anomaly() {
       const results = parse<CSVRowData>(csvText, {
         header: true,
         skipEmptyLines: true,
-        delimiter: ',',
-        transformHeader: (header) => header.trim(),
       });
 
       if (results.errors && results.errors.length > 0) {
@@ -142,10 +140,7 @@ export default function Anomaly() {
         
         {/* Date Range Selection */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Date Range Analysis</h2>
-            <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
-          </div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Date Range Analysis</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

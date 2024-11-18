@@ -56,17 +56,17 @@ export default function Metrics() {
         <div>
           {activeView === 'forecast' && (
             <div className="content-wrapper">
-              <Forecast hideNav={true} />
+              <Forecast />
             </div>
           )}
           {activeView === 'current' && (
             <div className="content-wrapper">
-              <CurrentUse hideNav={true} />
+              <CurrentUse />
             </div>
           )}
           {activeView === 'anomaly' && (
             <div className="content-wrapper">
-              <Anomaly hideNav={true} />
+              <Anomaly />
             </div>
           )}
         </div>

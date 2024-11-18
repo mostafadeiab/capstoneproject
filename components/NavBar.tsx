@@ -59,9 +59,7 @@ export default function NavBar() {
                 </button>
                 {isMetricsOpen && (
                   <div className="dropdown-menu">
-                    <Link href="/metrics/forecast" className="dropdown-item">Forecast</Link>
-                    <Link href="/metrics/current" className="dropdown-item">Current Use</Link>
-                    <Link href="/metrics/anomaly" className="dropdown-item">Anomaly</Link>
+                    <Link href="/metrics" className="dropdown-item">Metrics Dashboard</Link>
                   </div>
                 )}
               </div>

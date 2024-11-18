@@ -36,7 +36,7 @@ type CSVRowData = {
   [key: string]: string; // for other columns we don't use
 };
 
-export default function Forecast() {
+export default function Forecast({ hideNav = false }: { hideNav?: boolean }) {
   const [data, setData] = useState<ForecastData[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>('all');
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('1week');
@@ -147,9 +147,9 @@ export default function Forecast() {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavBar />
+      {!hideNav && <NavBar />}
       
-      <main className="max-w-7xl mx-auto px-8 py-16">
+      <main className={hideNav ? "" : "max-w-7xl mx-auto px-8 py-16"}>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Water Usage Forecast</h1>

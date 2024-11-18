@@ -30,11 +30,11 @@ type CSVRowData = {
   [key: string]: string;
 };
 
-type PageProps = {
+interface Props {
   hideNav?: boolean;
-};
+}
 
-export default function Anomaly({ hideNav = false }: PageProps) {
+export default function Anomaly({ hideNav = false }: Props) {
   const [data, setData] = useState<AnomalyData[]>([]);
   const [groupedAnomalies, setGroupedAnomalies] = useState<GroupedAnomaly[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');

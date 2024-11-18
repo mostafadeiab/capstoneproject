@@ -107,7 +107,7 @@ export default function Home() {
       <NavBar />
       
       <main className="max-w-7xl mx-auto px-8 py-16">
-        {/* Hero Section */}
+        {/* Hero Section with Buttons */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Image
@@ -124,6 +124,23 @@ export default function Home() {
           <p className="text-xl text-gray-600 italic mb-8">
             Monitor, Analyze, Save
           </p>
+          
+          {/* Moved Call to Action Buttons here */}
+          <div className="flex gap-4 justify-center mb-12">
+            <Link 
+              href="/fixtures"
+              className="bg-accent hover:bg-accent-dark text-white px-8 py-4 rounded-lg transition-all hover:scale-105 shadow-lg"
+            >
+              View Your Fixtures
+            </Link>
+            <Link
+              href="/metrics"
+              className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg transition-all hover:scale-105 shadow-lg"
+            >
+              Check Your Metrics
+            </Link>
+          </div>
+
           <p className="text-gray-600 max-w-2xl mx-auto">
             Understanding your household water consumption is the first step towards conservation.
             Here&apos;s what typical water usage looks like for a 3-person household:
@@ -183,22 +200,6 @@ export default function Home() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Call to Action */}
-        <div className="flex gap-4 justify-center mt-16">
-          <Link 
-            href="/fixtures"
-            className="bg-accent hover:bg-accent-dark text-white px-8 py-4 rounded-lg transition-all hover:scale-105 shadow-lg"
-          >
-            View Your Fixtures
-          </Link>
-          <Link
-            href="/metrics"
-            className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-lg transition-all hover:scale-105 shadow-lg"
-          >
-            Check Your Metrics
-          </Link>
         </div>
       </main>
     </div>

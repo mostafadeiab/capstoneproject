@@ -126,7 +126,7 @@ export default function Home() {
           </p>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Understanding your household water consumption is the first step towards conservation.
-            Here's what typical water usage looks like for a 3-person household:
+            Here&apos;s what typical water usage looks like for a 3-person household:
           </p>
         </div>
 

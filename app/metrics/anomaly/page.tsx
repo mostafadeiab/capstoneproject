@@ -50,6 +50,8 @@ export default function Anomaly() {
         skipEmptyLines: true,
         delimiter: ',',
         transformHeader: (header) => header.trim(),
+        quoteChar: '"',
+        escapeChar: '"',
       });
 
       if (results.errors && results.errors.length > 0) {
@@ -57,8 +59,8 @@ export default function Anomaly() {
         throw new Error(`Failed to parse CSV data: ${errorMessage}`);
       }
 
-      const formattedData = (results.data as CSVRowData[])
-        .filter((row) => row && row.Timestamp)
+      const formattedData = results.data
+        .filter((row): row is CSVRowData => Boolean(row && row.Timestamp && row['Device Name']))
         .map((row) => ({
           timestamp: row.Timestamp.trim(),
           date: row.Timestamp.split(' ')[0],

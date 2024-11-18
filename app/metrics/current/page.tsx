@@ -340,29 +340,6 @@ export default function CurrentUse() {
           </div>
         </div>
 
-        {/* Total Usage Card with gradient */}
-        <div className="bg-gradient-to-br from-primary/20 via-accent/20 to-primary/20 rounded-xl shadow-lg p-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-800">Total Water Usage</h2>
-              <p className="text-gray-600">
-                {viewMode === 'all-time' 
-                  ? `Last ${selectedTimeRange.replace(/\d+/, match => match + ' ')}`
-                  : 'Selected billing period'}
-              </p>
-              <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
-            </div>
-            <div className="text-right">
-              <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                {totalUsage} L
-              </p>
-              <p className="text-sm text-gray-600">
-                {selectedDevice === 'all' ? 'All fixtures' : selectedDevice.replace(/_/g, ' ')}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Usage Overview Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Pie Chart with gradient background */}
@@ -403,7 +380,7 @@ export default function CurrentUse() {
             </div>
           </div>
 
-          {/* Individual Fixture Cards with gradient backgrounds */}
+          {/* Individual Fixture Cards */}
           <div className="grid grid-cols-2 gap-4 content-start">
             {Object.entries(fixtureTotals).map(([deviceId, volume], index) => {
               const details = fixtureDetails[deviceId as keyof typeof fixtureDetails];
@@ -423,7 +400,30 @@ export default function CurrentUse() {
           </div>
         </div>
 
-        {/* Line Chart with gradient background */}
+        {/* Total Usage Card moved to bottom */}
+        <div className="bg-gradient-to-br from-primary/20 via-accent/20 to-primary/20 rounded-xl shadow-lg p-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">Total Water Usage</h2>
+              <p className="text-gray-600">
+                {viewMode === 'all-time' 
+                  ? `Last ${selectedTimeRange.replace(/\d+/, match => match + ' ')}`
+                  : 'Selected billing period'}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
+            </div>
+            <div className="text-right">
+              <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                {totalUsage} L
+              </p>
+              <p className="text-sm text-gray-600">
+                {selectedDevice === 'all' ? 'All fixtures' : selectedDevice.replace(/_/g, ' ')}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Line Chart */}
         <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-xl shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Usage Trend</h3>
           <div className="h-[400px]">

@@ -219,7 +219,10 @@ export default function CurrentUse() {
 
           filtered = filtered.filter(item => {
             const itemDate = new Date(item.timestamp);
-            return item.device === device && itemDate >= startDateTime && itemDate <= now;
+            return (selectedDevice === 'all' || item.device === selectedDevice) && 
+                   item.device === device && 
+                   itemDate >= startDateTime && 
+                   itemDate <= now;
           });
         } else {
           const billingStart = new Date(startDate);
@@ -227,7 +230,10 @@ export default function CurrentUse() {
           
           filtered = filtered.filter(item => {
             const itemDate = new Date(item.timestamp);
-            return item.device === device && itemDate >= billingStart && itemDate <= billingEnd;
+            return (selectedDevice === 'all' || item.device === selectedDevice) && 
+                   item.device === device && 
+                   itemDate >= billingStart && 
+                   itemDate <= billingEnd;
           });
         }
         

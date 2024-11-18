@@ -141,7 +141,7 @@ export default function Forecast() {
     setFilteredData(aggregatedData);
   }, [data, selectedDevice, selectedTimeRange, startDate]);
 
-  // Add this function to calculate individual fixture totals
+  // Modify the calculateFixtureTotals function
   const calculateFixtureTotals = () => {
     if (!data.length) return {};
     
@@ -171,7 +171,11 @@ export default function Forecast() {
               break;
           }
           
-          return item.device === device && itemDate >= startDateTime && itemDate <= endDateTime;
+          // Only include data for the selected device or all devices
+          return (selectedDevice === 'all' || item.device === selectedDevice) && 
+                 item.device === device && 
+                 itemDate >= startDateTime && 
+                 itemDate <= endDateTime;
         });
         
         acc[device] = Number(filteredData.reduce((sum, item) => sum + item.volume, 0).toFixed(2));

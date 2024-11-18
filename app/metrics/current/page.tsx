@@ -429,33 +429,6 @@ export default function CurrentUse() {
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={filteredData}>
-        {/* Total Usage Card */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-800">Total Water Usage</h2>
-              <p className="text-gray-600">
-                {viewMode === 'all-time' 
-                  ? `Last ${selectedTimeRange.replace(/\d+/, match => match + ' ')}`
-                  : 'Selected billing period'}
-              </p>
-              <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
-            </div>
-            <div className="text-right">
-              <p className="text-3xl font-bold text-primary">{totalUsage} L</p>
-              <p className="text-sm text-gray-600">
-                {selectedDevice === 'all' ? 'All fixtures' : selectedDevice.replace(/_/g, ' ')}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Line Chart */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Usage Trend</h3>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={filteredData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="date"

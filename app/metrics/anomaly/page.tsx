@@ -43,7 +43,10 @@ export default function Anomaly() {
     setIsLoading(true);
     setError('');
     try {
-      const results = parse<CSVRowData>(anomalyData, {
+      const response = await fetch('/Anomaly.csv');
+      const csvText = await response.text();
+
+      const results = parse<CSVRowData>(csvText, {
         header: true,
         skipEmptyLines: true,
         delimiter: ',',

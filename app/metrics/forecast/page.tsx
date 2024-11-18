@@ -73,12 +73,12 @@ export default function Forecast() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const results = parse(forecastData, {
+      const results = parse<CSVRowData>(forecastData, {
         header: true,
         skipEmptyLines: true,
       });
 
-      const formattedData = results.data.map((row) => ({
+      const formattedData = results.data.map((row: CSVRowData) => ({
         timestamp: row.Timestamp,
         device: row['Device Name'],
         volume: parseFloat(row['Volume Used (L)'])

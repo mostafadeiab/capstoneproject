@@ -86,12 +86,12 @@ export default function CurrentUse() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const results = parse(currentData, {
+      const results = parse<CSVRowData>(currentData, {
         header: true,
         skipEmptyLines: true,
       });
 
-      const formattedData = results.data.map((row) => ({
+      const formattedData = results.data.map((row: CSVRowData) => ({
         timestamp: row.Timestamp,
         device: row['Device Name'],
         volume: parseFloat(row['Volume Used (L)'])

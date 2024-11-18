@@ -44,7 +44,6 @@ export default function CurrentUse() {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [filteredData, setFilteredData] = useState<AggregatedData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [earliestDate, setEarliestDate] = useState<string>('');
   const [totalUsage, setTotalUsage] = useState<number>(0);
 
@@ -83,7 +82,6 @@ export default function CurrentUse() {
   };
 
   const loadData = async () => {
-    setIsLoading(true);
     try {
       const results = parse<CSVRowData>(currentData, {
         header: true,
@@ -107,8 +105,6 @@ export default function CurrentUse() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 

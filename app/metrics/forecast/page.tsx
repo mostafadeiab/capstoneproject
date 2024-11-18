@@ -41,7 +41,6 @@ export default function Forecast() {
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('1week');
   const [startDate, setStartDate] = useState<string>('');
   const [filteredData, setFilteredData] = useState<AggregatedData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [totalUsage, setTotalUsage] = useState<number>(0);
 
   const devices = [
@@ -70,7 +69,6 @@ export default function Forecast() {
   };
 
   const loadData = async () => {
-    setIsLoading(true);
     try {
       const results = parse<CSVRowData>(forecastData, {
         header: true,
@@ -91,8 +89,6 @@ export default function Forecast() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -139,10 +135,6 @@ export default function Forecast() {
     const aggregatedData = aggregateDataByDay(filtered);
     setFilteredData(aggregatedData);
   }, [data, selectedDevice, selectedTimeRange, startDate]);
-
-  const handleClearData = () => {
-    setFilteredData([]);
-  };
 
   return (
     <div>

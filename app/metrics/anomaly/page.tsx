@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import NavBar from "@/components/NavBar";
 import { parse } from 'papaparse';
+import anomalyData from '@/data/Anomaly.csv';
 
 type AnomalyData = {
   timestamp: string;
@@ -44,37 +45,33 @@ export default function Anomaly() {
     setIsLoading(true);
     setError('');
     try {
-      const response = await fetch('/Anomaly.csv');
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      
-      const csvText = await response.text();
-      console.log('CSV Text:', csvText); // Debug log
-      
-      const results = parse<CSVRowData>(csvText, {
+      const results = parse(anomalyData, {
         header: true,
         skipEmptyLines: true,
+        delimiter: ',',
+        transformHeader: (header) => header.trim(),
       });
 
-      console.log('Parsed Results:', results); // Debug log
-
-      if (results.errors.length > 0) {
-        console.error('Parse errors:', results.errors);
-        throw new Error('Failed to parse CSV data');
+      if (results.errors && results.errors.length > 0) {
+        const errorMessage = results.errors.map(err => err.message).join(', ');
+        throw new Error(`Failed to parse CSV data: ${errorMessage}`);
       }
 
       const formattedData = results.data
-        .map((row) => ({
-          timestamp: row.Timestamp,
+        .filter((row: CSVRowData) => row && row.Timestamp)
+        .map((row: CSVRowData) => ({
+          timestamp: row.Timestamp.trim(),
           date: row.Timestamp.split(' ')[0],
-          device: row['Device Name'],
+          device: row['Device Name'].trim(),
           volume: parseFloat(row['Volume Used (L)']),
           isAnomaly: row.Anomaly === '1'
         }))
         .filter((item: AnomalyData) => item.isAnomaly);
 
-      console.log('Formatted Data:', formattedData); // Debug log
+      if (formattedData.length === 0) {
+        setError('No anomaly data found');
+        return;
+      }
 
       setData(formattedData);
 
@@ -98,7 +95,6 @@ export default function Anomaly() {
         new Date(b.date).getTime() - new Date(a.date).getTime()
       );
 
-      console.log('Grouped Anomalies:', sortedGroups); // Debug log
       setGroupedAnomalies(sortedGroups);
 
       // Set initial date range if data exists
@@ -109,9 +105,8 @@ export default function Anomaly() {
         setStartDate(earliest.toISOString().split('T')[0]);
         setEndDate(latest.toISOString().split('T')[0]);
       }
-    } catch (error) {
-      console.error('Error loading data:', error);
-      setError(error instanceof Error ? error.message : 'Failed to load data');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setIsLoading(false);
     }

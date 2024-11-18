@@ -13,6 +13,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
+import forecastData from '@/data/Forecast.csv';
 
 type ForecastData = {
   timestamp: string;
@@ -72,10 +73,7 @@ export default function Forecast() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/Forecast.csv');
-      const csvText = await response.text();
-      
-      const results = parse<CSVRowData>(csvText, {
+      const results = parse(forecastData, {
         header: true,
         skipEmptyLines: true,
       });

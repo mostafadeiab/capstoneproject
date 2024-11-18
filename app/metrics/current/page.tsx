@@ -13,6 +13,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
+import currentData from '@/data/Current.csv';
 
 type UsageData = {
   timestamp: string;
@@ -85,10 +86,7 @@ export default function CurrentUse() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/Current.csv');
-      const csvText = await response.text();
-      
-      const results = parse<CSVRowData>(csvText, {
+      const results = parse(currentData, {
         header: true,
         skipEmptyLines: true,
       });

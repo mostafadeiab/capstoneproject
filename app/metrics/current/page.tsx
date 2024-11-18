@@ -266,82 +266,107 @@ export default function CurrentUse() {
   return (
     <div>
       <div className="space-y-8">
-        {/* Controls at the top */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">View Mode</label>
-            <select
-              value={viewMode}
-              onChange={(e) => setViewMode(e.target.value as 'all-time' | 'billing-period')}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2"
-            >
-              <option value="all-time">All Time</option>
-              <option value="billing-period">Billing Period</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Fixture</label>
-            <select
-              value={selectedDevice}
-              onChange={(e) => setSelectedDevice(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2"
-            >
-              <option value="all">All Fixtures</option>
-              {devices.filter(device => device !== 'all').map(device => (
-                <option key={device} value={device}>
-                  {device.replace('_', ' ')}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {viewMode === 'all-time' ? (
+        {/* Controls at the top with gradient background */}
+        <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-xl p-6 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">View Mode</label>
               <select
-                value={selectedTimeRange}
-                onChange={(e) => setSelectedTimeRange(e.target.value as TimeRange)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2"
+                value={viewMode}
+                onChange={(e) => setViewMode(e.target.value as 'all-time' | 'billing-period')}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white/80 backdrop-blur-sm"
               >
-                {timeRanges.map(range => (
-                  <option key={range.value} value={range.value}>
-                    {range.label}
+                <option value="all-time">All Time</option>
+                <option value="billing-period">Billing Period</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Fixture</label>
+              <select
+                value={selectedDevice}
+                onChange={(e) => setSelectedDevice(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white/80 backdrop-blur-sm"
+              >
+                <option value="all">All Fixtures</option>
+                {devices.filter(device => device !== 'all').map(device => (
+                  <option key={device} value={device}>
+                    {device.replace('_', ' ')}
                   </option>
                 ))}
               </select>
             </div>
-          ) : (
-            <>
+
+            {viewMode === 'all-time' ? (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  min={earliestDate}
-                  max={endDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
+                <select
+                  value={selectedTimeRange}
+                  onChange={(e) => setSelectedTimeRange(e.target.value as TimeRange)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white/80 backdrop-blur-sm"
+                >
+                  {timeRanges.map(range => (
+                    <option key={range.value} value={range.value}>
+                      {range.label}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  min={startDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2"
-                />
-              </div>
-            </>
-          )}
+            ) : (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    min={earliestDate}
+                    max={endDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white/80 backdrop-blur-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    min={startDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white/80 backdrop-blur-sm"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Total Usage Card with gradient */}
+        <div className="bg-gradient-to-br from-primary/20 via-accent/20 to-primary/20 rounded-xl shadow-lg p-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">Total Water Usage</h2>
+              <p className="text-gray-600">
+                {viewMode === 'all-time' 
+                  ? `Last ${selectedTimeRange.replace(/\d+/, match => match + ' ')}`
+                  : 'Selected billing period'}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
+            </div>
+            <div className="text-right">
+              <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                {totalUsage} L
+              </p>
+              <p className="text-sm text-gray-600">
+                {selectedDevice === 'all' ? 'All fixtures' : selectedDevice.replace(/_/g, ' ')}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Usage Overview Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Pie Chart */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          {/* Pie Chart with gradient background */}
+          <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Usage Distribution</h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -378,12 +403,15 @@ export default function CurrentUse() {
             </div>
           </div>
 
-          {/* Individual Fixture Cards */}
+          {/* Individual Fixture Cards with gradient backgrounds */}
           <div className="grid grid-cols-2 gap-4 content-start">
             {Object.entries(fixtureTotals).map(([deviceId, volume], index) => {
               const details = fixtureDetails[deviceId as keyof typeof fixtureDetails];
               return (
-                <div key={deviceId} className="bg-white rounded-lg shadow p-4">
+                <div 
+                  key={deviceId} 
+                  className="bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+                >
                   <h3 className="font-semibold text-gray-800">{details.name}</h3>
                   <p className="text-sm text-gray-500 mb-2">{details.location}</p>
                   <p className="text-xl font-bold" style={{ color: COLORS[index % COLORS.length] }}>
@@ -395,6 +423,12 @@ export default function CurrentUse() {
           </div>
         </div>
 
+        {/* Line Chart with gradient background */}
+        <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 rounded-xl shadow-lg p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Usage Trend</h3>
+          <div className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={filteredData}>
         {/* Total Usage Card */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center">

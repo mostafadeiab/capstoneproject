@@ -15,7 +15,6 @@ import {
   Pie,
   Cell
 } from 'recharts';
-import forecastData from '@/data/Forecast.csv';
 
 type ForecastData = {
   timestamp: string;

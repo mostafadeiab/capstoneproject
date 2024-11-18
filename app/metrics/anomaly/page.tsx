@@ -50,8 +50,6 @@ export default function Anomaly() {
         skipEmptyLines: true,
         delimiter: ',',
         transformHeader: (header) => header.trim(),
-        quoteChar: '"',
-        escapeChar: '"',
       });
 
       if (results.errors && results.errors.length > 0) {

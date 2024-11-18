@@ -143,6 +143,7 @@ export default function Forecast() {
           <div>
             <h2 className="text-xl font-semibold text-gray-800">Total Forecasted Usage</h2>
             <p className="text-gray-600">Next {selectedTimeRange.replace(/\d+/, match => match + ' ')}</p>
+            <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-primary">{totalUsage} L</p>

@@ -179,6 +179,7 @@ export default function CurrentUse() {
                 ? `Last ${selectedTimeRange.replace(/\d+/, match => match + ' ')}`
                 : 'Selected billing period'}
             </p>
+            <p className="text-sm text-gray-500 mt-1">Data for a 3-person household</p>
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-primary">{totalUsage} L</p>

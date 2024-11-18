@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import NavBar from "@/components/NavBar";
-import { parse, ParseResult } from 'papaparse';
+import { parse } from 'papaparse';
 import anomalyData from '@/data/Anomaly.csv';
 
 type AnomalyData = {

@@ -23,9 +23,14 @@ type GroupedAnomaly = {
 type CSVRowData = {
   Timestamp: string;
   'Device Name': string;
+  'Start Time': string;
+  'End Time': string;
+  'Duration (s)': string;
+  'Flow Rate (L/min)': string;
   'Volume Used (L)': string;
+  'Event ID': string;
+  Occupants: string;
   Anomaly: string;
-  [key: string]: string;
 };
 
 export default function Anomaly() {
@@ -44,38 +49,22 @@ export default function Anomaly() {
     try {
       const response = await fetch('/Anomaly.csv');
       const csvText = await response.text();
-      
-      // Clean the CSV text
-      const cleanedCsvText = csvText
-        .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
-        .replace(/[^\x20-\x7E\n,]/g, '') // Keep only printable ASCII characters, newlines, and commas
-        .replace(/\r\n/g, '\n') // Normalize line endings
-        .trim(); // Remove leading/trailing whitespace
 
-      const results = parse<CSVRowData>(cleanedCsvText, {
+      const results = parse<CSVRowData>(csvText, {
         header: true,
-        skipEmptyLines: 'greedy',
-        transform: (value) => value.trim(),
-        transformHeader: (header) => header.trim(),
+        skipEmptyLines: true,
       });
 
       if (results.errors && results.errors.length > 0) {
-        console.error('CSV Parse Errors:', results.errors);
         throw new Error(`Failed to parse CSV data: ${results.errors.map(err => err.message).join(', ')}`);
       }
 
       const formattedData = results.data
-        .filter((row): row is CSVRowData => {
-          return Boolean(row && 
-                        row.Timestamp && 
-                        row['Device Name'] && 
-                        row['Volume Used (L)'] && 
-                        !isNaN(parseFloat(row['Volume Used (L)'])));
-        })
+        .filter((row): row is CSVRowData => Boolean(row && row.Timestamp && row['Device Name']))
         .map((row) => ({
-          timestamp: row.Timestamp.trim(),
+          timestamp: row.Timestamp,
           date: row.Timestamp.split(' ')[0],
-          device: row['Device Name'].trim(),
+          device: row['Device Name'],
           volume: parseFloat(row['Volume Used (L)']),
           isAnomaly: row.Anomaly === '1'
         }))
@@ -119,7 +108,6 @@ export default function Anomaly() {
         setEndDate(latest.toISOString().split('T')[0]);
       }
     } catch (err) {
-      console.error('Load Data Error:', err);
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setIsLoading(false);

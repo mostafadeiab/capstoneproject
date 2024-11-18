@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import NavBar from "@/components/NavBar";
-import { parse } from 'papaparse';
+import { parse, ParseResult } from 'papaparse';
 import anomalyData from '@/data/Anomaly.csv';
 
 type AnomalyData = {
@@ -45,7 +45,7 @@ export default function Anomaly() {
     setIsLoading(true);
     setError('');
     try {
-      const results = parse(anomalyData, {
+      const results = parse<CSVRowData>(anomalyData, {
         header: true,
         skipEmptyLines: true,
         delimiter: ',',
@@ -57,16 +57,16 @@ export default function Anomaly() {
         throw new Error(`Failed to parse CSV data: ${errorMessage}`);
       }
 
-      const formattedData = results.data
-        .filter((row: CSVRowData) => row && row.Timestamp)
-        .map((row: CSVRowData) => ({
+      const formattedData = (results.data as CSVRowData[])
+        .filter((row) => row && row.Timestamp)
+        .map((row) => ({
           timestamp: row.Timestamp.trim(),
           date: row.Timestamp.split(' ')[0],
           device: row['Device Name'].trim(),
           volume: parseFloat(row['Volume Used (L)']),
           isAnomaly: row.Anomaly === '1'
         }))
-        .filter((item: AnomalyData) => item.isAnomaly);
+        .filter((item) => item.isAnomaly);
 
       if (formattedData.length === 0) {
         setError('No anomaly data found');

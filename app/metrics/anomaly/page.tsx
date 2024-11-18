@@ -44,19 +44,34 @@ export default function Anomaly() {
     try {
       const response = await fetch('/Anomaly.csv');
       const csvText = await response.text();
+      
+      // Clean the CSV text
+      const cleanedCsvText = csvText
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+        .replace(/[^\x20-\x7E\n,]/g, '') // Keep only printable ASCII characters, newlines, and commas
+        .replace(/\r\n/g, '\n') // Normalize line endings
+        .trim(); // Remove leading/trailing whitespace
 
-      const results = parse<CSVRowData>(csvText, {
+      const results = parse<CSVRowData>(cleanedCsvText, {
         header: true,
-        skipEmptyLines: true,
+        skipEmptyLines: 'greedy',
+        transform: (value) => value.trim(),
+        transformHeader: (header) => header.trim(),
       });
 
       if (results.errors && results.errors.length > 0) {
-        const errorMessage = results.errors.map(err => err.message).join(', ');
-        throw new Error(`Failed to parse CSV data: ${errorMessage}`);
+        console.error('CSV Parse Errors:', results.errors);
+        throw new Error(`Failed to parse CSV data: ${results.errors.map(err => err.message).join(', ')}`);
       }
 
       const formattedData = results.data
-        .filter((row): row is CSVRowData => Boolean(row && row.Timestamp && row['Device Name']))
+        .filter((row): row is CSVRowData => {
+          return Boolean(row && 
+                        row.Timestamp && 
+                        row['Device Name'] && 
+                        row['Volume Used (L)'] && 
+                        !isNaN(parseFloat(row['Volume Used (L)'])));
+        })
         .map((row) => ({
           timestamp: row.Timestamp.trim(),
           date: row.Timestamp.split(' ')[0],
@@ -104,6 +119,7 @@ export default function Anomaly() {
         setEndDate(latest.toISOString().split('T')[0]);
       }
     } catch (err) {
+      console.error('Load Data Error:', err);
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setIsLoading(false);

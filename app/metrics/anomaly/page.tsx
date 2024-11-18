@@ -131,23 +131,16 @@ export default function Anomaly() {
   }, [data, startDate, endDate]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <NavBar />
-      
-      <main className="max-w-7xl mx-auto px-8 py-16">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Anomaly Detection</h1>
-          <p className="text-gray-600 mt-2">Data for a 3-person household</p>
-        </div>
-
+    <div>
+      <div className="space-y-8">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-8">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             {error}
           </div>
         )}
         
         {/* Date Range Selection */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Date Range Analysis</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -242,7 +235,7 @@ export default function Anomaly() {
             <p className="text-center text-gray-600 py-8">No anomalies detected</p>
           )}
         </div>
-      </main>
+      </div>
     </div>
   );
 } 

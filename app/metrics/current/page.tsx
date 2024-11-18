@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { parse } from 'papaparse';
+import currentData from '@/data/Current.csv';
 import {
   LineChart,
   Line,
@@ -12,7 +13,6 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import currentData from '@/data/Current.csv';
 
 type UsageData = {
   timestamp: string;
@@ -192,7 +192,110 @@ export default function CurrentUse() {
           </div>
         </div>
 
-        {/* Rest of your component content without the NavBar and main wrapper */}
+        {/* Controls */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">View Mode</label>
+            <select
+              value={viewMode}
+              onChange={(e) => setViewMode(e.target.value as 'all-time' | 'billing-period')}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2"
+            >
+              <option value="all-time">All Time</option>
+              <option value="billing-period">Billing Period</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Fixture</label>
+            <select
+              value={selectedDevice}
+              onChange={(e) => setSelectedDevice(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2"
+            >
+              {devices.map(device => (
+                <option key={device} value={device}>
+                  {device === 'all' ? 'All Fixtures' : device.replace(/_/g, ' ')}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {viewMode === 'all-time' ? (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
+              <select
+                value={selectedTimeRange}
+                onChange={(e) => setSelectedTimeRange(e.target.value as TimeRange)}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2"
+              >
+                {timeRanges.map(range => (
+                  <option key={range.value} value={range.value}>
+                    {range.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  min={earliestDate}
+                  max={endDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  min={startDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2"
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Chart */}
+        <div className="h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={filteredData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="date"
+                tick={{ fontSize: 12 }}
+                angle={-45}
+                textAnchor="end"
+              />
+              <YAxis 
+                label={{ 
+                  value: 'Volume (Litres)', 
+                  angle: -90, 
+                  position: 'insideLeft' 
+                }}
+              />
+              <Tooltip 
+                formatter={(value: number) => [`${value.toFixed(2)} L`, 'Water Usage']}
+                labelFormatter={(label) => `Date: ${label}`}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="volume"
+                name="Daily Water Usage"
+                stroke="#00A4CC"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

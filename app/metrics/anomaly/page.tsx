@@ -22,7 +22,6 @@ type GroupedAnomaly = {
   }[];
 };
 
-// Define type for CSV row data
 type CSVRowData = {
   Timestamp: string;
   'Device Name': string;
@@ -31,7 +30,11 @@ type CSVRowData = {
   [key: string]: string;
 };
 
-export default function Anomaly({ hideNav = false }: { hideNav?: boolean }) {
+interface AnomalyPageProps {
+  hideNav?: boolean;
+}
+
+export default function Anomaly({ hideNav }: AnomalyPageProps) {
   const [data, setData] = useState<AnomalyData[]>([]);
   const [groupedAnomalies, setGroupedAnomalies] = useState<GroupedAnomaly[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');

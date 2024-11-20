@@ -57,25 +57,6 @@ export default function Forecast() {
     'kitchen_sink'
   ];
 
-  const timeRanges = [
-    { value: '24hours', label: 'Next 24 Hours' },
-    { value: '48hours', label: 'Next 48 Hours' },
-    { value: '72hours', label: 'Next 72 Hours' }
-  ];
-
-  const aggregateDataByDay = (data: ForecastData[]) => {
-    const aggregated = data.reduce((acc: { [key: string]: number }, curr) => {
-      const date = curr.timestamp.split(' ')[0];
-      acc[date] = (acc[date] || 0) + curr.volume;
-      return acc;
-    }, {});
-
-    return Object.entries(aggregated).map(([date, volume]) => ({
-      date,
-      volume: Number(volume.toFixed(2))
-    })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  };
-
   const aggregateDataByHour = (data: ForecastData[]) => {
     const aggregated = data.reduce((acc: { [key: string]: number }, curr) => {
       const date = new Date(curr.timestamp);

@@ -60,6 +60,7 @@ export default function NavBar() {
                 {isMetricsOpen && (
                   <div className="dropdown-menu">
                     <Link href="/metrics" className="dropdown-item">Metrics Dashboard</Link>
+                    <Link href="/demo" className="dropdown-item">Demo Data</Link>
                   </div>
                 )}
               </div>

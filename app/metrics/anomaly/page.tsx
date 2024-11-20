@@ -50,17 +50,33 @@ export default function Anomaly() {
       const response = await fetch('/Anomaly.csv');
       const csvText = await response.text();
 
-      const results = parse<CSVRowData>(csvText, {
+      // Clean the CSV text before parsing
+      const cleanedCsvText = csvText
+        .replace(/\r\n/g, '\n') // Normalize line endings
+        .replace(/\uFEFF/g, '') // Remove BOM
+        .trim(); // Remove leading/trailing whitespace
+
+      const results = parse<CSVRowData>(cleanedCsvText, {
         header: true,
-        skipEmptyLines: true,
+        skipEmptyLines: 'greedy',
+        transformHeader: (header) => header.trim(),
+        transform: (value) => value.trim(),
+        delimiter: ',',
       });
 
       if (results.errors && results.errors.length > 0) {
+        console.error('CSV Parse Errors:', results.errors);
         throw new Error(`Failed to parse CSV data: ${results.errors.map(err => err.message).join(', ')}`);
       }
 
       const formattedData = results.data
-        .filter((row): row is CSVRowData => Boolean(row && row.Timestamp && row['Device Name']))
+        .filter((row): row is CSVRowData => {
+          return Boolean(row && 
+                        row.Timestamp && 
+                        row['Device Name'] && 
+                        row['Volume Used (L)'] && 
+                        !isNaN(parseFloat(row['Volume Used (L)'])));
+        })
         .map((row) => ({
           timestamp: row.Timestamp,
           date: row.Timestamp.split(' ')[0],
@@ -108,6 +124,7 @@ export default function Anomaly() {
         setEndDate(latest.toISOString().split('T')[0]);
       }
     } catch (err) {
+      console.error('Load Data Error:', err);
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setIsLoading(false);

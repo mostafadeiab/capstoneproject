@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { parse } from 'papaparse';
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -327,12 +327,12 @@ export default function Forecast() {
           </div>
         </div>
 
-        {/* Line Chart */}
+        {/* Bar Chart */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Usage Trend</h3>
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={filteredData}>
+              <BarChart data={filteredData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="date"
@@ -352,14 +352,13 @@ export default function Forecast() {
                   labelFormatter={(label) => `Date: ${label}`}
                 />
                 <Legend />
-                <Line
-                  type="monotone"
+                <Bar
                   dataKey="volume"
                   name="Daily Water Usage"
-                  stroke="#00A4CC"
-                  dot={false}
+                  fill="#00A4CC"
+                  radius={[4, 4, 0, 0]}  // Rounded top corners
                 />
-              </LineChart>
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>

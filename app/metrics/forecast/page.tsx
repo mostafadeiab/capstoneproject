@@ -27,7 +27,7 @@ type AggregatedData = {
   volume: number;
 };
 
-type TimeRange = '1week' | '1month' | '3months' | '6months' | '1year';
+type TimeRange = '24hours' | '48hours' | '72hours';
 
 // Define type for CSV row data
 type CSVRowData = {
@@ -40,7 +40,7 @@ type CSVRowData = {
 export default function Forecast() {
   const [data, setData] = useState<ForecastData[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>('all');
-  const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('1week');
+  const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>('24hours');
   const [startDate, setStartDate] = useState<string>('');
   const [filteredData, setFilteredData] = useState<AggregatedData[]>([]);
   const [totalUsage, setTotalUsage] = useState<number>(0);
@@ -57,10 +57,30 @@ export default function Forecast() {
     'kitchen_sink'
   ];
 
+  const timeRanges = [
+    { value: '24hours', label: 'Next 24 Hours' },
+    { value: '48hours', label: 'Next 48 Hours' },
+    { value: '72hours', label: 'Next 72 Hours' }
+  ];
+
   const aggregateDataByDay = (data: ForecastData[]) => {
     const aggregated = data.reduce((acc: { [key: string]: number }, curr) => {
       const date = curr.timestamp.split(' ')[0];
       acc[date] = (acc[date] || 0) + curr.volume;
+      return acc;
+    }, {});
+
+    return Object.entries(aggregated).map(([date, volume]) => ({
+      date,
+      volume: Number(volume.toFixed(2))
+    })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  };
+
+  const aggregateDataByHour = (data: ForecastData[]) => {
+    const aggregated = data.reduce((acc: { [key: string]: number }, curr) => {
+      const date = new Date(curr.timestamp);
+      const hourKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`;
+      acc[hourKey] = (acc[hourKey] || 0) + curr.volume;
       return acc;
     }, {});
 
@@ -108,20 +128,14 @@ export default function Forecast() {
     const endDateTime = new Date(startDate);
 
     switch (selectedTimeRange) {
-      case '1week':
-        endDateTime.setDate(endDateTime.getDate() + 7);
+      case '24hours':
+        endDateTime.setHours(endDateTime.getHours() + 24);
         break;
-      case '1month':
-        endDateTime.setMonth(endDateTime.getMonth() + 1);
+      case '48hours':
+        endDateTime.setHours(endDateTime.getHours() + 48);
         break;
-      case '3months':
-        endDateTime.setMonth(endDateTime.getMonth() + 3);
-        break;
-      case '6months':
-        endDateTime.setMonth(endDateTime.getMonth() + 6);
-        break;
-      case '1year':
-        endDateTime.setFullYear(endDateTime.getFullYear() + 1);
+      case '72hours':
+        endDateTime.setHours(endDateTime.getHours() + 72);
         break;
     }
 
@@ -137,7 +151,7 @@ export default function Forecast() {
     const total = filtered.reduce((sum, item) => sum + item.volume, 0);
     setTotalUsage(Number(total.toFixed(2)));
 
-    const aggregatedData = aggregateDataByDay(filtered);
+    const aggregatedData = aggregateDataByHour(filtered);
     setFilteredData(aggregatedData);
   }, [data, selectedDevice, selectedTimeRange, startDate]);
 
@@ -154,20 +168,14 @@ export default function Forecast() {
           const endDateTime = new Date(startDate);
           
           switch (selectedTimeRange) {
-            case '1week':
-              endDateTime.setDate(endDateTime.getDate() + 7);
+            case '24hours':
+              endDateTime.setHours(endDateTime.getHours() + 24);
               break;
-            case '1month':
-              endDateTime.setMonth(endDateTime.getMonth() + 1);
+            case '48hours':
+              endDateTime.setHours(endDateTime.getHours() + 48);
               break;
-            case '3months':
-              endDateTime.setMonth(endDateTime.getMonth() + 3);
-              break;
-            case '6months':
-              endDateTime.setMonth(endDateTime.getMonth() + 6);
-              break;
-            case '1year':
-              endDateTime.setFullYear(endDateTime.getFullYear() + 1);
+            case '72hours':
+              endDateTime.setHours(endDateTime.getHours() + 72);
               break;
           }
           
@@ -244,11 +252,9 @@ export default function Forecast() {
               onChange={(e) => setSelectedTimeRange(e.target.value as TimeRange)}
               className="w-full rounded-lg border border-gray-300 px-4 py-2"
             >
-              <option value="1week">Next 7 Days</option>
-              <option value="1month">Next 30 Days</option>
-              <option value="3months">Next 3 Months</option>
-              <option value="6months">Next 6 Months</option>
-              <option value="1year">Next 12 Months</option>
+              <option value="24hours">Next 24 Hours</option>
+              <option value="48hours">Next 48 Hours</option>
+              <option value="72hours">Next 72 Hours</option>
             </select>
           </div>
         </div>
@@ -339,6 +345,8 @@ export default function Forecast() {
                   tick={{ fontSize: 12 }}
                   angle={-45}
                   textAnchor="end"
+                  interval={0}
+                  tickFormatter={(value) => value.split(' ')[1]} // Only show time
                 />
                 <YAxis 
                   label={{ 
@@ -349,14 +357,14 @@ export default function Forecast() {
                 />
                 <Tooltip 
                   formatter={(value: number) => [`${value.toFixed(2)} L`, 'Water Usage']}
-                  labelFormatter={(label) => `Date: ${label}`}
+                  labelFormatter={(label) => `Time: ${label}`}
                 />
                 <Legend />
                 <Bar
                   dataKey="volume"
-                  name="Daily Water Usage"
+                  name="Hourly Water Usage"
                   fill="#00A4CC"
-                  radius={[4, 4, 0, 0]}  // Rounded top corners
+                  radius={[4, 4, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>

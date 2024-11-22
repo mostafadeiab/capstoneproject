@@ -94,9 +94,9 @@ export default function Demo() {
       'Device Name': 'bathroom_sink',
       'Start Time': time,
       'End Time': endTime,
-      'Duration (s)': formatNumber(duration, 1),
-      'Flow Rate (L/min)': formatNumber(flowRate, 2),
-      'Volume Used (L)': formatNumber(volume, 3),
+      'Duration (s)': formatNumber(duration, 5),
+      'Flow Rate (L/min)': formatNumber(flowRate, 6),
+      'Volume Used (L)': formatNumber(volume, 6),
       'Event ID': generateEventId(),
       'Occupants': '3'
     };
@@ -129,7 +129,7 @@ export default function Demo() {
               onClick={clearAddedRows}
               className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors"
             >
-              Clear Added Rows
+              Clear
             </button>
           </div>
         </div>

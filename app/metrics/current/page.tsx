@@ -84,6 +84,26 @@ export default function CurrentUse() {
     })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
 
+  const aggregateDataByTime = (data: UsageData[]) => {
+    if (selectedTimeRange === 'today') {
+      // Hourly aggregation for today's data
+      const aggregated = data.reduce((acc: { [key: string]: number }, curr) => {
+        const date = new Date(curr.timestamp);
+        const hourKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:00`;
+        acc[hourKey] = (acc[hourKey] || 0) + curr.volume;
+        return acc;
+      }, {});
+
+      return Object.entries(aggregated).map(([date, volume]) => ({
+        date,
+        volume: Number(volume.toFixed(2))
+      })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else {
+      // Daily aggregation for other time ranges
+      return aggregateDataByDay(data);
+    }
+  };
+
   const loadData = async () => {
     try {
       const results = parse<CSVRowData>(currentData, {
@@ -167,7 +187,7 @@ export default function CurrentUse() {
     const total = filtered.reduce((sum, item) => sum + item.volume, 0);
     setTotalUsage(Number(total.toFixed(2)));
 
-    const aggregatedData = aggregateDataByDay(filtered);
+    const aggregatedData = aggregateDataByTime(filtered);
     setFilteredData(aggregatedData);
   }, [data, viewMode, selectedDevice, selectedTimeRange, startDate, endDate]);
 
@@ -435,6 +455,13 @@ export default function CurrentUse() {
                   tick={{ fontSize: 12 }}
                   angle={-45}
                   textAnchor="end"
+                  tickFormatter={(value) => {
+                    // Show only time for today's view
+                    if (selectedTimeRange === 'today') {
+                      return value.split(' ')[1];  // Returns HH:00
+                    }
+                    return value.split(' ')[0];  // Returns YYYY-MM-DD
+                  }}
                 />
                 <YAxis 
                   label={{ 
@@ -445,13 +472,18 @@ export default function CurrentUse() {
                 />
                 <Tooltip 
                   formatter={(value: number) => [`${value.toFixed(2)} L`, 'Water Usage']}
-                  labelFormatter={(label) => `Date: ${label}`}
+                  labelFormatter={(label) => {
+                    if (selectedTimeRange === 'today') {
+                      return `Time: ${label.split(' ')[1]}`;
+                    }
+                    return `Date: ${label}`;
+                  }}
                 />
                 <Legend />
                 <Line
                   type="monotone"
                   dataKey="volume"
-                  name="Daily Water Usage"
+                  name={selectedTimeRange === 'today' ? 'Hourly Water Usage' : 'Daily Water Usage'}
                   stroke="#00A4CC"
                   dot={false}
                 />
